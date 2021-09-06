@@ -1,5 +1,4 @@
-import HttpException from '@src/exceptions/HttpException';
-import BarcodeService, { BarcodeResult } from '@src/services/Barcode';
+import BarcodeService, { BarcodeResult } from '@src/services/barcode';
 import { celebrate, Joi } from 'celebrate';
 import { Router } from 'express';
 import expressAsyncHandler from 'express-async-handler';

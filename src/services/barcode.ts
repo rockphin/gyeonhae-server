@@ -1,3 +1,5 @@
+import config from '@src/config';
+import axios from 'axios';
 import dayjs, { Dayjs } from 'dayjs';
 import { Service } from 'typedi';
 
@@ -82,9 +84,13 @@ export default class BarcodeService {
     productRepotNumber &&
       searchParams.append('PRDLST_REPORT_NO', productRepotNumber.toString());
     barcode && searchParams.append('BAR_CD', barcode.toString());
-    return fetch(
-      `http://openapi.foodsafetykorea.go.kr/api/keyId/serviceId/dataType/${startIndex}/${endIndex}?${searchParams.toString()}`,
-    ).then((res) => res.json() as Promise<Result[]>);
+    return axios
+      .get<Result[]>(
+        `http://openapi.foodsafetykorea.go.kr/api/${
+          config.foodApiKey
+        }/C005/json/${startIndex}/${endIndex}?${searchParams.toString()}`,
+      )
+      .then((res) => res.data);
   }
 
   public async getBarcodeInfo(code: number): Promise<BarcodeResult[]> {
