@@ -1,6 +1,7 @@
 import HttpException from '@src/exceptions/HttpException';
 import { imageMulter } from '@src/loaders/multer';
 import BarcodeService, { BarcodeResult } from '@src/services/barcode';
+import BrailleService from '@src/services/braille';
 import SceneService from '@src/services/scene';
 import { celebrate, Joi } from 'celebrate';
 import { Router } from 'express';
@@ -36,6 +37,19 @@ const recognize = (app: Router) => {
       const result = await sceneService.labelDetection(req.file);
       if (!result) throw new HttpException(404);
       res.json(result);
+    }),
+  );
+
+  route.post<never, { result: string }, { content: string }>(
+    '/scene',
+    celebrate({
+      body: {
+        content: Joi.string(),
+      },
+    }),
+    expressAsyncHandler(async (req, res) => {
+      const brailleService = Container.get(BrailleService);
+      res.json({ result: brailleService.toAscii(req.body.content) });
     }),
   );
 };
