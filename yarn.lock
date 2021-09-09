@@ -595,6 +595,11 @@ braces@~3.0.2:
   dependencies:
     fill-range "^7.0.1"
 
+braille.js@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/braille.js/-/braille.js-0.0.2.tgz#281f86b748b757c05242205c84cd2464f6aba869"
+  integrity sha512-fxxb7JVOSF7PSpEVAO9VveenFOS/lkO1o0lZnbywbgaZ8Ha4WzqfU/kvwRkd8m+3TMXZpq02zv3+63O7XTzRcQ==
+
 buffer-equal-constant-time@1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/buffer-equal-constant-time/-/buffer-equal-constant-time-1.0.1.tgz#f8e71132f7ffe6e01a5c9697a4c6f3e48d5cc819"
