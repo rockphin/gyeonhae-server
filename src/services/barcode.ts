@@ -18,11 +18,11 @@ interface BarcodeRequestOption {
 
 interface Result {
   /** 품목보고(신고)번호 */
-  PRDLST_REPORT_NO: string;
+  PRDLST_REPORT_NO: `${number}`;
   /** 보고(신고일) */
-  PRMS_DT: string;
+  PRMS_DT: `${number}`;
   /** 생산중단일. 생산중이면 빈 문자열 */
-  END_DT: string;
+  END_DT: `${number}`;
   /** 제품명 */
   PRDLST_NM: string;
   /** 유통기한. 몇개월, 어디에 보관 */
@@ -36,18 +36,29 @@ interface Result {
   /** 주소 */
   SITE_ADDR: string;
   /** 폐업일자. 폐업이 아니면 빈 문자열 */
-  CLSBIZ_DT: string;
+  CLSBIZ_DT: `${number}`;
   /** 유통 바코드 */
-  BAR_CD: string;
+  BAR_CD: `${number}`;
+}
+
+interface ApiResult {
+  C005: {
+    RESULT: {
+      MSG: string;
+      CODE: string;
+    };
+    total_count: `${number}`;
+    row: Result[];
+  };
 }
 
 export interface BarcodeResult {
   /** 품목보고(신고)번호 */
-  productReportNumber: string;
+  productReportNumber: number;
   /** 보고(신고일) */
-  productReportDate: string;
+  productReportDate: Date;
   /** 생산중단일. 생산중이면 빈 문자열 */
-  endDate: string;
+  endDate: Date;
   /** 제품명 */
   productName: string;
   /** 유통기한. 몇개월, 어디에 보관 */
@@ -61,9 +72,9 @@ export interface BarcodeResult {
   /** 주소 */
   siteAddress: string;
   /** 폐업일자. 폐업이 아니면 빈 문자열 */
-  closeBusinessDate: string;
+  closeBusinessDate: Date;
   /** 유통 바코드 */
-  barcode: string;
+  barcode: number;
 }
 
 @Service()
@@ -85,12 +96,12 @@ export default class BarcodeService {
       searchParams.append('PRDLST_REPORT_NO', productRepotNumber.toString());
     barcode && searchParams.append('BAR_CD', barcode.toString());
     return axios
-      .get<Result[]>(
+      .get<ApiResult>(
         `http://openapi.foodsafetykorea.go.kr/api/${
           config.foodApiKey
         }/C005/json/${startIndex}/${endIndex}?${searchParams.toString()}`,
       )
-      .then((res) => res.data);
+      .then((res) => res.data.C005.row);
   }
 
   public async getBarcodeInfo(code: number): Promise<BarcodeResult[]> {
@@ -109,14 +120,14 @@ export default class BarcodeService {
         POG_DAYCNT,
         SITE_ADDR,
       }) => ({
-        barcode: BAR_CD,
-        closeBusinessDate: CLSBIZ_DT,
-        endDate: END_DT,
+        barcode: Number.parseInt(BAR_CD, 10),
+        closeBusinessDate: dayjs(CLSBIZ_DT).toDate(),
+        endDate: dayjs(END_DT).toDate(),
         industryName: INDUTY_NM,
         manufacturerName: BSSH_NM,
         productName: PRDLST_NM,
-        productReportDate: PRMS_DT,
-        productReportNumber: PRDLST_REPORT_NO,
+        productReportDate: dayjs(PRMS_DT).toDate(),
+        productReportNumber: Number.parseInt(PRDLST_REPORT_NO, 10),
         productType: PRDLST_DCNM,
         shelfLife: POG_DAYCNT,
         siteAddress: SITE_ADDR,
